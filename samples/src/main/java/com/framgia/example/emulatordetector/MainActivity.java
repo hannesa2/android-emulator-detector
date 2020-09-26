@@ -1,13 +1,15 @@
 package com.framgia.example.emulatordetector;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.framgia.android.emulator.BuildConfig;
 import com.framgia.android.emulator.EmulatorDetector;
@@ -24,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.text);
+        textView = findViewById(R.id.text);
         textView.setText("Checking....");
 
         // Last check
@@ -49,35 +52,31 @@ public class MainActivity extends AppCompatActivity {
     @OnShowRationale(Manifest.permission.READ_PHONE_STATE)
     void showRationaleForCamera(final PermissionRequest request) {
         new AlertDialog.Builder(this)
-            .setMessage("Need READ_PHONE_STATE permission for check with Telephony function")
-            .setPositiveButton("Allow", (dialog, button) -> request.proceed())
-            .setNegativeButton("Deny", (dialog, button) -> request.cancel())
-            .show();
+                .setMessage("Need READ_PHONE_STATE permission for check with Telephony function")
+                .setPositiveButton("Allow", (dialog, button) -> request.proceed())
+                .setNegativeButton("Deny", (dialog, button) -> request.cancel())
+                .show();
     }
 
     private void checkWith(boolean telephony) {
         EmulatorDetector.with(this)
-            .setCheckTelephony(telephony)
-            .addPackageName("com.bluestacks")
-            .setDebug(true)
-            .detect(new EmulatorDetector.OnEmulatorDetectorListener() {
-                @Override
-                public void onResult(final boolean isEmulator) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                .setCheckTelephony(telephony)
+                .addPackageName("com.bluestacks")
+                .setDebug(true)
+                .detect(new EmulatorDetector.OnEmulatorDetectorListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onResult(final boolean isEmulator) {
+                        runOnUiThread(() -> {
                             if (isEmulator) {
-                                textView.setText("This device is emulator"
-                                    + getCheckInfo());
+                                textView.setText("This device is emulator" + getCheckInfo());
                             } else {
-                                textView.setText("This device is not emulator"
-                                    + getCheckInfo());
+                                textView.setText("This device is not emulator" + getCheckInfo());
                             }
-                        }
-                    });
-                    Log.d(getClass().getName(), "Running on emulator --> " + isEmulator);
-                }
-            });
+                        });
+                        Log.d(getClass().getName(), "Running on emulator --> " + isEmulator);
+                    }
+                });
     }
 
     @OnPermissionDenied(Manifest.permission.READ_PHONE_STATE)
@@ -93,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String getCheckInfo() {
         return "\nTelephony enable is "
-            + EmulatorDetector.with(MainActivity.this).isCheckTelephony()
-            + "\n\n\n" + EmulatorDetector.getDeviceInfo()
-            + "\n\nEmulator Detector version " + BuildConfig.VERSION_NAME;
+                + EmulatorDetector.with(MainActivity.this).isCheckTelephony()
+                + "\n\n\n" + EmulatorDetector.getDeviceInfo()
+                + "\n\nEmulator Detector version " + BuildConfig.VERSION_NAME;
     }
 
     @Override

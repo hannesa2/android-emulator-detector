@@ -245,12 +245,12 @@ public final class EmulatorDetector {
         if (result) return true;
         result |= Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic");
         if (result) return true;
-        result |= "google_sdk".equals(Build.PRODUCT);
+        result = "google_sdk".equals(Build.PRODUCT);
         return result;
     }
 
     private boolean checkAdvanced() {
-        boolean result = checkTelephony()
+        return checkTelephony()
                 || checkFiles(GENY_FILES, "Geny")
                 || checkFiles(ANDY_FILES, "Andy")
                 || checkFiles(NOX_FILES, "Nox")
@@ -258,7 +258,6 @@ public final class EmulatorDetector {
                 || checkFiles(PIPES, "Pipes")
                 || checkIp()
                 || (checkQEmuProps() && checkFiles(X86_FILES, "X86"));
-        return result;
     }
 
     private boolean checkPackageName() {
