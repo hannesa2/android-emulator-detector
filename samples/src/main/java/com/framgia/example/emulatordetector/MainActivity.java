@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.framgia.android.emulator.BuildConfig;
 import com.framgia.android.emulator.EmulatorDetector;
+import com.framgia.android.emulator.OnEmulatorDetectorListener;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCheckTelephony(telephony)
                 .addPackageName("com.bluestacks")
                 .setDebug(true)
-                .detect(new EmulatorDetector.OnEmulatorDetectorListener() {
+                .detect(new OnEmulatorDetectorListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onResult(final boolean isEmulator) {
